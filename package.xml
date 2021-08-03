@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <package format="2">
-  <name>mettler_toledo_quantos</name>
+  <name>mettler_toledo_quantos_q2</name>
   <version>1.0.0</version>
   <description>A ROS Driver for Mettler Toledo Quantos dipsensing system. Uses RS232 to communicate.</description>
 

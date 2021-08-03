@@ -1,3 +1,3 @@
 <launch>
-	<node name="QuantosROSNode" pkg="mettler_toledo_quantos" type="QuantosROSNode" />
+	<node name="QuantosROSNode" pkg="mettler_toledo_quantos_q2" type="QuantosROSNode" />
 </launch>

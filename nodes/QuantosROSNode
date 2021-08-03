@@ -3,7 +3,7 @@
 #Script to use the Mettler Toledo Quantos dispensing system with ROS
 
 import rospy
-from mettler_toledo_quantos import QuantosDriverROS
+from mettler_toledo_quantos_q2 import QuantosDriverROS
 
 if __name__ == "__main__": #Object oriented initialization for ROS
     rospy.init_node("Quantos_Driver", anonymous=True) #initialize rospy node

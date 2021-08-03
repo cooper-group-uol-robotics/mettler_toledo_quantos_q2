@@ -1,4 +1,4 @@
-# mettler_toledo_quantos
+# mettler_toledo_quantos_q2
 #### ROS Driver for Mettler Toledo Quantos dispensing system
 #### Uses USB for serial communication
 ##### Written by Jakub Glowacki

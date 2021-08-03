@@ -27,7 +27,6 @@ class QuantosDriverSerial:
     # Commands are defined in Quantos MT-SICS datasheet, however need to be sent over serial as
     # ASCII encoded byte arrays and must end with a carriage return and line break to
     # be recognized. Received messsages can also be decoded then to unicode strings.
-
     def startDosing(self):
         global serialCom
         serialCom.write(bytearray("QRA 61 1\r\n", "ascii"))
