@@ -16,21 +16,12 @@ class QuantosDriverROS:
         global pub
         self.Quantos = QuantosDriverSerial()  # Create object of IKADriver class, for serial communication
         # Initialize ros subscriber of topic to which commands are published
-        rospy.Subscriber("IKA_Commands", IKACommand, self.callback_commands)
+        rospy.Subscriber("Quantos_Commands", QuantosCommand, self.callback_commands)
         # Initialize ros published for readings of temperatures and stirring values
-        pub = rospy.Publisher("IKA_Readings", IKAReading, queue_size=10)
-        rate = rospy.Rate(1) #Initialize rate object for consistent timed looping
-        rospy.loginfo("IKA driver started")
-        while not rospy.is_shutdown(): #Whenever driver is running, loop each second polling all values and publishing them to topic
-            tempPlate = self.IKA.getHotplateTemp()
-            tempExt = self.IKA.getExternalTemp()
-            stirSpeed = self.IKA.getStirringSpeed()
-            visc = self.IKA.getViscosityTrend()
-            pub.publish(float(tempPlate), float(tempExt), float(stirSpeed), float(visc))
-            rate.sleep()
+        pub = rospy.Publisher("Quantos_Readings", QuantosResponse, queue_size=10)
+        rospy.loginfo("Quantos Driver Started")
 
-        # Call upon appropriate function in driver for any possible command
-
+    # Call upon appropriate function in driver for any possible command
     def startHeat(self):
         self.IKA.startHeat()
         rospy.loginfo("Turning on Heating")
