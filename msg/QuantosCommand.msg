@@ -21,7 +21,7 @@ int32 SETALGO = 18
 int32 SETAS = 19
 
 int32 quantos_command
-String quantos_ID
-boolean quantos_bool
+string quantos_ID
+bool quantos_bool
 float32 quantos_float
 int32 quantos_int

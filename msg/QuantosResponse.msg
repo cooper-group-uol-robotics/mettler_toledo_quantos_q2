@@ -1,4 +1,4 @@
 int32 frontDoorPos
 int32 samplerPos
-boolean samplerStatus
-boolean weighingPanStatus
+bool samplerStatus
+bool weighingPanStatus
