@@ -129,5 +129,41 @@ class QuantosDriverROS:
             self.startDose()
         elif(msg.quantos_command == msg.STOPDOSE):
             self.stopDose()
+        elif(msg.quantos_command == msg.GETDOORPOS):
+            self.getFrontDoorPos()
+        elif(msg.quantos_command == msg.GETSAMPLEPOS):
+            self.getSamplerPos()
+        elif(msg.quantos_command == msg.GETHEAD):
+            self.getHeadData()
+        elif(msg.quantos_command == msg.GETSAMPLE):
+            self.getSampleData()
+        elif(msg.quantos_command == msg.MOVEPIN):
+            self.moveDosingHeadPin(msg.quantos_bool)
+        elif(msg.quantos_command == msg.MOVEDOOR):
+            self.moveFrontDoor(msg.quantos_bool)
+        elif(msg.quantos_command == msg.SETSAMPLEPOS):
+            self.moveSampler(msg.quantos_int)
+        elif(msg.quantos_command == msg.SETTAPBEFORE):
+            self.setTappingBeforeDosing(msg.quantos_bool)
+        elif(msg.quantos_command == msg.SETTAPDURING):
+            self.setTappingWhileDosing(msg.quantos_bool)
+        elif(msg.quantos_command == msg.SETTAPINT):
+            self.setTapperIntensity(msg.quantos_int)
+        elif(msg.quantos_command == msg.SETTAPDURATION):
+            self.setTapperDuration(msg.quantos_int)
+        elif(msg.quantos_command == msg.SETTARGET):
+            self.setTargetValue(msg.quantos_float)
+        elif(msg.quantos_command == msg.SETTOL):
+            self.setTolerance(msg.quantos_float)
+        elif(msg.quantos_command == msg.SETTOLMODE):
+            self.setToleranceMode(msg.quantos_bool)
+        elif(msg.quantos_command == msg.SETSAMPLEID):
+            self.setSampleID(msg.quantos_ID)
+        elif(msg.quantos_command == msg.SETPANOFF):
+            self.setValuePan()
+        elif(msg.quantos_command == msg.SETALGO):
+            self.setAlgorithm(msg.quantos_bool)
+        elif(msg.quantos_command == msg.SETAS):
+            self.setAntiStatic(msg.quantos_bool)
         else:
             rospy.loginfo("invalid command")

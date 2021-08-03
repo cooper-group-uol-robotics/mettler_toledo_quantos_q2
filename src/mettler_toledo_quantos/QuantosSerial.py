@@ -120,7 +120,6 @@ class QuantosDriverSerial:
         else:
             return False
 
-
     def setTapperDuration(self, duration):
         global serialCom
         if (1 <= duration <= 10):
