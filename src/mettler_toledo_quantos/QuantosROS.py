@@ -14,8 +14,6 @@ from mettler_toledo_quantos.QuantosSerial import QuantosDriverSerial
 class QuantosDriverROS:
     global doorPos = 0
     global samplerPos = 0
-    global samplerStatus = False
-    global weighingPanStatus = False
     def __init__(self):
         global pub
         self.Quantos = QuantosDriverSerial()  # Create object of IKADriver class, for serial communication
@@ -37,8 +35,15 @@ class QuantosDriverROS:
 
     def getFrontDoorPos(self):
         doorPos = self.Quantos.getFrontDoorPos()
-        pub.publish(doorPos, samplerPos, samplerStatus, weighingPanStatus)
+        pub.publish(doorPos, samplerPos)
         rospy.loginfo("Getting Door Position")
+
+    def getSamplerPos(self):
+        samplerPos = self.Quantos.getSamplerPos()
+        pub.publish(doorPos, samplerPos)
+        rospy.loginfo("Getting Sampler Position")
+
+
 
     # Callback for subscriber. Calls correct function depending on command received
     def callback_commands(self, msg):
