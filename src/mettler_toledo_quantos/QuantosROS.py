@@ -9,13 +9,17 @@ from mettler_toledo_quantos.msg import QuantosResponse
 from mettler_toledo_quantos.msg import QuantosCommand
 from mettler_toledo_quantos.msg import QuantosSample
 from mettler_toledo_quantos.QuantosSerial import QuantosDriverSerial
-
+from xml.dom import minidom
 
 class QuantosDriverROS:
-    global doorPos = 0
-    global samplerPos = 0
+    global doorPos
+    global samplerPos
     def __init__(self):
         global pub
+        global doorPos
+        global samplerPos
+        doorPos = 0
+        samplerPos = 0
         self.Quantos = QuantosDriverSerial()  # Create object of IKADriver class, for serial communication
         # Initialize ros subscriber of topic to which commands are published
         rospy.Subscriber("Quantos_Commands", QuantosCommand, self.callback_commands)
@@ -46,12 +50,14 @@ class QuantosDriverROS:
     def getHeadData(self):
         headData = self.Quantos.getHeadData()
         #fancy processing of XML stuff placeholder
+        xmldoc = minidom.parseStrings(headData)
         pubSample.publish("Stuff")
         rospy.loginfo("Published Head Data")
 
     def getSampleData(self):
         sampleData = self.Quantos.getSampleData()
         #fancy processing of XML stuff placeholder
+        xmldoc = minidom.parseStrings(sampleData)
         pubSample.publish("Stuff")
         rospy.loginfo("Published Sample Data")
 

@@ -35,12 +35,12 @@ class QuantosDriverSerial:
 
     def stopDosing(self):
         global serialCom
-        serialCom.writesbytearray("QRA 61 4\r\n", "ascii"))
+        serialCom.writes(bytearray("QRA 61 4\r\n", "ascii"))
         return True
 
     def getFrontDoorPos(self):
         global serialCom
-        serialCom.writesbytearray("QRD 2 3 7\r\n", "ascii"))
+        serialCom.write(bytearray("QRD 2 3 7\r\n", "ascii"))
         x = serialCom.read_until("\n")  # Read response
         stringx = str(x.decode('ascii'))  # Decode response
         response = stringx[10]
@@ -48,7 +48,7 @@ class QuantosDriverSerial:
 
     def getSamplerPos(self):
         global serialCom
-        serialCom.writesbytearray("QRD 2 3 7\r\n", "ascii"))
+        serialCom.write(bytearray("QRD 2 3 7\r\n", "ascii"))
         x = serialCom.read_until("\n")  # Read response
         stringx = str(x.decode('ascii'))  # Decode response
         response = stringx[10]
@@ -56,14 +56,14 @@ class QuantosDriverSerial:
 
     def getHeadData(self):
         global serialCom
-        serialCom.writesbytearray("QRD 2 4 11\r\n", "ascii"))
+        serialCom.write(bytearray("QRD 2 4 11\r\n", "ascii"))
         x = serialCom.read_until("QRD 2 4 11 A")  # Read response
         stringx = str(x.decode('ascii'))  # Decode response
         return stringx
 
     def getSampleData(self):
         global serialCom
-        serialCom.writesbytearray("QRD 2 4 12\r\n", "ascii"))
+        serialCom.write(bytearray("QRD 2 4 12\r\n", "ascii"))
         x = serialCom.read_until("QRD 2 4 12 A")  # Read response
         stringx = str(x.decode('ascii'))  # Decode response
         return stringx
