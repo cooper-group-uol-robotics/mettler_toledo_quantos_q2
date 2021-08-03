@@ -51,6 +51,7 @@ class QuantosDriverROS:
     def getHeadData(self):
         global pubSample
         headData = self.Quantos.getHeadData()
+        print(headData)
         try:
             xmldoc = minidom.parseString(headData)
             substance = xmldoc.getElementsByTagName('Substance')[0].childNodes[0].data if (len(xmldoc.getElementsByTagName('Substance')) > 0 and len(xmldoc.getElementsByTagName('Substance')[0].childNodes) > 0) else ""
@@ -86,6 +87,7 @@ class QuantosDriverROS:
     def getSampleData(self):
         global pubSample
         sampleData = self.Quantos.getSampleData()
+        print(sampleData)
         try:
             xmldoc = minidom.parseString(sampleData)
             substance = xmldoc.getElementsByTagName('Substance')[0].childNodes[0].data if (len(xmldoc.getElementsByTagName('Substance')) > 0 and len(xmldoc.getElementsByTagName('Substance')[0].childNodes) > 0) else ""
