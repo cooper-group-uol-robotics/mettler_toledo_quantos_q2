@@ -1,8 +1,8 @@
 #!/usr/bin/env python
 
-# ROS Wrapper for Serial Driver for IKA RCT Digital Heater-Stirrer
-# Uses ROS to facilitate control of the hotplate and stirrer
-# Made by Jakub Glowacki 27/07/2021
+# ROS Wrapper for Serial Driver for Mettler Toledo Quantos dispensing system
+# Uses ROS to facilitate control of various functions of dispensing system
+# Made by Jakub Glowacki 03/08/2021
 
 import rospy
 from mettler_toledo_quantos.msg import QuantosResponse
@@ -22,54 +22,20 @@ class QuantosDriverROS:
         rospy.loginfo("Quantos Driver Started")
 
     # Call upon appropriate function in driver for any possible command
-    def startHeat(self):
-        self.IKA.startHeat()
-        rospy.loginfo("Turning on Heating")
+    def startDose(self):
+        self.Quantos.startDosing()
+        rospy.loginfo("Starting Dosing")
 
-    def stopHeat(self):
-        self.IKA.stopHeat()
-        rospy.loginfo("Turning off Heating")
+    def stopDose(self):
+        self.Quantos.stopDosing()
+        rospy.loginfo("Stopping Dosing")
 
-    def startStir(self):
-        self.IKA.startStir()
-        rospy.loginfo("Turning on Stirring")
-
-    def stopStir(self):
-        self.IKA.stopStir()
-        rospy.loginfo("Turning off Stirring")
-
-    def setStir(self, stir):
-        self.IKA.setStir(stir)
-        rospy.loginfo("Setting Stirring To: " + str(stir) + "RPM")
-
-    def setHeat(self, heat):
-        self.IKA.setHeat(heat)
-        rospy.loginfo("Setting Heating To: " + str(heat) + "C")
 
     # Callback for subscriber. Calls correct function depending on command received
     def callback_commands(self, msg):
-        if(msg.ika_command == msg.HEATON):
-            self.startHeat()
-        elif(msg.ika_command == msg.HEATOFF):
-            self.stopHeat()
-        elif(msg.ika_command == msg.STIRON):
-            self.startStir()
-        elif(msg.ika_command == msg.STIROFF):
-            self.stopStir()
-        elif(msg.ika_command == msg.SETSTIR):
-            self.setStir(msg.ika_param)
-        elif(msg.ika_command == msg.SETHEAT):
-            self.setHeat(msg.ika_param)
-        elif(msg.ika_command == msg.STIRAT):
-            self.setStir(msg.ika_param)
-            self.startStir()
-        elif(msg.ika_command == msg.HEATAT):
-            self.setHeat(msg.ika_param)
-            self.startHeat()
-        elif(msg.ika_command == msg.ALLOFF):
-            self.stopHeat()
-            self.stopStir()
-            self.setStir(0)
-            self.setHeat(0)
+        if(msg.quantos_command == msg.STARTDOSE):
+            self.startDose()
+        elif(msg.quantos_command == msg.STOPDOSE):
+            self.stopDose()
         else:
             rospy.loginfo("invalid command")

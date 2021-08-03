@@ -2,7 +2,7 @@
 
 # Serial Driver for Mettler Toledo Quantos Dispensing System
 # Uses USB-RS232 communication to send commands and receive messages
-# Made by Jakub Glowacki 27/07/2021
+# Made by Jakub Glowacki 03/08/2021
 
 import time
 import serial
