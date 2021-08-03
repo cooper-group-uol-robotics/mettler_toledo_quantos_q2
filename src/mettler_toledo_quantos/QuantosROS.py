@@ -43,7 +43,85 @@ class QuantosDriverROS:
         pub.publish(doorPos, samplerPos)
         rospy.loginfo("Getting Sampler Position")
 
+    def getHeadData(self):
+        headData = self.Quantos.getHeadData()
+        #fancy processing of XML stuff placeholder
+        pubSample.publish("Stuff")
+        rospy.loginfo("Published Head Data")
 
+    def getSampleData(self):
+        sampleData = self.Quantos.getSampleData()
+        #fancy processing of XML stuff placeholder
+        pubSample.publish("Stuff")
+        rospy.loginfo("Published Sample Data")
+
+    def moveDosingHeadPin(self, locked):
+        self.Quantos.moveDosingHeadPin(locked)
+        rospy.loginfo("Moving Dosing Head Pin")
+
+    def moveFrontDoor(self, open):
+        self.Quantos.moveFrontDoor(open)
+        rospy.loginfo("Moving Front Door")
+
+    def moveSampler(self, position):
+        if (self.Quantos.moveSampler(position)):
+            rospy.loginfo("Moving Sampler")
+        else:
+            rospy.loginfo("Sample Move Failed: Incorrect Input")
+
+    def setTappingBeforeDosing(self, activated):
+        self.Quantos.setTappingBeforeDosing(activated)
+        rospy.loginfo("Setting Status of Tapping Before Dosing Setting")
+
+    def setTappingWhileDosing(self, activated):
+        self.Quantos.setTappingWhileDosing(activated)
+        rospy.loginfo("Setting Status of Tapping While Dosing Setting")
+
+    def setTapperIntensity(self, intensity):
+        if(self.Quantos.setTapperIntensity(intensity)):
+            rospy.loginfo("Setting Intensity of Tapper")
+        else:
+            rospy.loginfo("Failed to set tapper intensity: Incorrect Input")
+
+    def setTapperDuration(self, duration):
+        if(self.Quantos.setTapperDuration(duration)):
+            rospy.loginfo("Setting Duration of Tapper")
+        else:
+            rospy.loginfo("Failed to set tapper duration: Incorrect Input")
+
+    def setTargetValue(self, target):
+        if(self.Quantos.setTargetValue(target)):
+            rospy.loginfo("Setting Target Value")
+        else:
+            rospy.loginfo("Failed to set target value: Incorrect Input")
+
+    def setTolerance(self, percentage):
+        if(self.Quantos.setTolerance(percentage)):
+            rospy.loginfo("Setting Percentage Tolerance")
+        else:
+            rospy.loginfo("Failed to set Tolerance: Incorrect Input")
+
+    def setToleranceMode(self, overdose):
+        self.Quantos.setToleranceMode(overdose)
+        rospy.loginfo("Setting Tolerance Overdose Mode")
+
+    def setSampleID(self, ID):
+        if(self.Quantos.setSampleID(ID)):
+            rospy.loginfo("Setting Sample ID")
+        else:
+            rospy.loginfo("Failed to set Sample ID: Incorrect Input")
+
+    def setValuePan(self):
+        self.Quantos.setValuePan()
+        rospy.loginfo("Setting weighing pan as empty")
+
+    def setAlgorithm(self, advanced):
+        self.Quantos.setAlgorithm(advanced)
+        rospy.loginfo("Setting dispensing algorithm value")
+
+    def setAntiStatic(self, activated):
+        self.Quantos.setAntiStatic(activated)
+        rospy.loginfo("Setting antistatic system activation")
 
     # Callback for subscriber. Calls correct function depending on command received
     def callback_commands(self, msg):
