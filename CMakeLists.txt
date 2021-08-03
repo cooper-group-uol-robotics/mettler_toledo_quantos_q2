@@ -50,6 +50,7 @@ catkin_python_setup()
    FILES
    QuantosCommand.msg
    QuantosResponse.msg
+   QuantosSample.msg
  )
 
 ## Generate services in the 'srv' folder

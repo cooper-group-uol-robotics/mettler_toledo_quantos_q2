@@ -7,18 +7,23 @@
 import rospy
 from mettler_toledo_quantos.msg import QuantosResponse
 from mettler_toledo_quantos.msg import QuantosCommand
+from mettler_toledo_quantos.msg import QuantosSample
 from mettler_toledo_quantos.QuantosSerial import QuantosDriverSerial
 
 
 class QuantosDriverROS:
-
+    global doorPos = 0
+    global samplerPos = 0
+    global samplerStatus = False
+    global weighingPanStatus = False
     def __init__(self):
         global pub
         self.Quantos = QuantosDriverSerial()  # Create object of IKADriver class, for serial communication
         # Initialize ros subscriber of topic to which commands are published
         rospy.Subscriber("Quantos_Commands", QuantosCommand, self.callback_commands)
         # Initialize ros published for readings of temperatures and stirring values
-        pub = rospy.Publisher("Quantos_Readings", QuantosResponse, queue_size=10)
+        pub = rospy.Publisher("Quantos_Info", QuantosResponse, queue_size=10)
+        pubSample = rospy.Publisher("Quantos_Samples", QuantosSample, queue_size=10)
         rospy.loginfo("Quantos Driver Started")
 
     # Call upon appropriate function in driver for any possible command
@@ -30,6 +35,10 @@ class QuantosDriverROS:
         self.Quantos.stopDosing()
         rospy.loginfo("Stopping Dosing")
 
+    def getFrontDoorPos(self):
+        doorPos = self.Quantos.getFrontDoorPos()
+        pub.publish(doorPos, samplerPos, samplerStatus, weighingPanStatus)
+        rospy.loginfo("Getting Door Position")
 
     # Callback for subscriber. Calls correct function depending on command received
     def callback_commands(self, msg):

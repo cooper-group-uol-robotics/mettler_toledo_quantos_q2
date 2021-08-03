@@ -1,4 +1,4 @@
-float32 bedTemp
-float32 extTemp
-float32 stirSpeed
-float32 viscTrend
+int32 frontDoorPos
+int32 samplerPos
+boolean samplerStatus
+boolean weighingPanStatus
