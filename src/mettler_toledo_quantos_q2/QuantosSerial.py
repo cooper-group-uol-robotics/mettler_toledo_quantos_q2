@@ -4,6 +4,7 @@
 # Uses USB-RS232 communication to send commands and receive messages
 # Made by Jakub Glowacki 03/08/2021
 
+from csv import reader
 import time
 import serial
 import re
@@ -27,6 +28,23 @@ class QuantosDriverSerial:
     # Commands are defined in Quantos MT-SICS datasheet, however need to be sent over serial as
     # ASCII encoded byte arrays and must end with a carriage return and line break to
     # be recognized. Received messsages can also be decoded then to unicode strings.
+
+    def catchResponse(self):
+        global serialCom
+        x = serialCom.read_until("\r\n")
+        print(x)
+        #Match Responses to Error messages
+        with open('response.csv', 'r') as read_obj:
+            # pass the file object to reader() to get the reader object
+            csv_reader = reader(read_obj)
+            # Pass reader object to list() to get a list of lists
+            list_of_rows = list(csv_reader)
+            for i in range(10):
+                if (x == list_of_rows[i][0]):
+                    print(list_of_rows[i][1])
+                    break
+
+
     def startDosing(self):
         global serialCom
         serialCom.write(bytearray("QRA 61 1\r\n", "ascii"))

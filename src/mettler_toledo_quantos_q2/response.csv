@@ -1,0 +1,21 @@
+QRA 61 1 A, Dosing Successfully Started
+QRA 61 1 I 1, Not mounted
+QRA 61 1 I 2, Another job is running
+QRA 61 1 I 3, Timeout
+QRA 61 1 I 4, Not selected
+QRA 61 1 I 5, Not Allowed at the moment
+QRA 61 1 I 6, Weight not stable
+QRA 61 1 I 7, Powderflow error
+QRA 61 1 I 8, Stopped by external action
+QRA 61 1 I 9, Safepos error
+QRA 61 1 I 10, Head not allowed
+QRA 61 1 I 11, Head limit reached
+QRA 61 1 I 12, Head expiry date reached
+QRA 61 1 I 13, Sampler blocked
+QRA 61 L, Incorrect Parameter
+QRA 61 3 A, Dosing Stopped Successfully
+QRA 61 3 I 1, Not mounted
+QRA 61 3 I 2, Another job is running
+QRA 61 3 I 3, Timeout
+QRA 61 3 I 4, Not selected
+QRA 61 3 I 5, Not allowed at the moment
