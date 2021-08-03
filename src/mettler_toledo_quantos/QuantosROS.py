@@ -18,6 +18,7 @@ class QuantosDriverROS:
         global pub
         global doorPos
         global samplerPos
+        global pubSample
         doorPos = 0
         samplerPos = 0
         self.Quantos = QuantosDriverSerial()  # Create object of IKADriver class, for serial communication
@@ -48,18 +49,74 @@ class QuantosDriverROS:
         rospy.loginfo("Getting Sampler Position")
 
     def getHeadData(self):
+        global pubSample
         headData = self.Quantos.getHeadData()
-        #fancy processing of XML stuff placeholder
-        xmldoc = minidom.parseStrings(headData)
-        pubSample.publish("Stuff")
-        rospy.loginfo("Published Head Data")
+        try:
+            xmldoc = minidom.parseString(headData)
+            substance = xmldoc.getElementsByTagName('Substance')[0].childNodes[0].data if (len(xmldoc.getElementsByTagName('Substance')) > 0 and len(xmldoc.getElementsByTagName('Substance')[0].childNodes) > 0) else ""
+            LotID = xmldoc.getElementsByTagName('Lot_ID')[0].childNodes[0].data if (len(xmldoc.getElementsByTagName('Lot_ID')) > 0 and len(xmldoc.getElementsByTagName('Lot_ID')[0].childNodes) > 0) else ""
+            UserID = xmldoc.getElementsByTagName('User_ID')[0].childNodes[0].data if (len(xmldoc.getElementsByTagName('User_ID')) > 0 and len(xmldoc.getElementsByTagName('User_ID')[0].childNodes) > 0) else ""
+            FillingDate = xmldoc.getElementsByTagName('Dispense_date')[0].childNodes[0].data if (len(xmldoc.getElementsByTagName('Dispense_date')) > 0 and len(xmldoc.getElementsByTagName('Dispense_date')[0].childNodes) > 0) else ""
+            ExpiryDate = xmldoc.getElementsByTagName('Exp._date')[0].childNodes[0].data if (len(xmldoc.getElementsByTagName('Exp._date')) > 0 and len(xmldoc.getElementsByTagName('Exp._date')[0].childNodes) > 0) else ""
+            RetestDate = xmldoc.getElementsByTagName('Retest_date')[0].childNodes[0].data if (len(xmldoc.getElementsByTagName('Retest_date')) > 0 and len(xmldoc.getElementsByTagName('Retest_date')[0].childNodes) > 0) else ""
+            mgFillWeight = xmldoc.getElementsByTagName('Content')[0].childNodes[0].data if (len(xmldoc.getElementsByTagName('Content')) > 0 and len(xmldoc.getElementsByTagName('Content')[0].childNodes) > 0) else ""
+            RemainingDoses = xmldoc.getElementsByTagName('Rem._dosages')[0].childNodes[0].data if (len(xmldoc.getElementsByTagName('Rem._dosages')) > 0 and len(xmldoc.getElementsByTagName('Rem._dosages')[0].childNodes) > 0) else ""
+            TerminalSNR = xmldoc.getElementsByTagName('Terminal_SNR')[0].childNodes[0].data if (len(xmldoc.getElementsByTagName('Terminal_SNR')) > 0 and len(xmldoc.getElementsByTagName('Terminal_SNR')[0].childNodes) > 0) else ""
+            BridgeSNR = xmldoc.getElementsByTagName('Bridge_SNR')[0].childNodes[0].data if (len(xmldoc.getElementsByTagName('Bridge_SNR')) > 0 and len(xmldoc.getElementsByTagName('Bridge_SNR')[0].childNodes) > 0) else ""
+            BalanceType = xmldoc.getElementsByTagName('Balance_Type')[0].childNodes[0].data if (len(xmldoc.getElementsByTagName('Balance_Type')) > 0 and len(xmldoc.getElementsByTagName('Balance_Type')[0].childNodes) > 0) else ""
+            BalanceID = xmldoc.getElementsByTagName('Balance_ID')[0].childNodes[0].data if (len(xmldoc.getElementsByTagName('Balance_ID')) > 0 and len(xmldoc.getElementsByTagName('Balance_ID')[0].childNodes) > 0) else ""
+            LastCalibration = xmldoc.getElementsByTagName('Last_cal.')[0].childNodes[0].data if (len(xmldoc.getElementsByTagName('Last_cal.')) > 0 and len(xmldoc.getElementsByTagName('Last_cal.')[0].childNodes) > 0) else ""
+            OptionSNR = xmldoc.getElementsByTagName('Option_SNR')[0].childNodes[0].data if (len(xmldoc.getElementsByTagName('Option_SNR')) > 0 and len(xmldoc.getElementsByTagName('Option_SNR')[0].childNodes) > 0) else ""
+            DoseUnitSNR = xmldoc.getElementsByTagName('Dose_unit_SNR')[0].childNodes[0].data if (len(xmldoc.getElementsByTagName('Dose_unit_SNR')) > 0 and len(xmldoc.getElementsByTagName('Dose_unit_SNR')[0].childNodes) > 0) else ""
+            ApplicationName = xmldoc.getElementsByTagName('Appl._Name')[0].childNodes[0].data if (len(xmldoc.getElementsByTagName('Appl._Name')) > 0 and len(xmldoc.getElementsByTagName('Appl._Name')[0].childNodes) > 0) else ""
+            DateTime = xmldoc.getElementsByTagName('Date_Time')[0].childNodes[0].data if (len(xmldoc.getElementsByTagName('Date_Time')) > 0 and len(xmldoc.getElementsByTagName('Date_Time')[0].childNodes) > 0) else ""
+            LevelControl = xmldoc.getElementsByTagName('Levelcontrol')[0].childNodes[0].data if (len(xmldoc.getElementsByTagName('Levelcontrol')) > 0 and len(xmldoc.getElementsByTagName('Levelcontrol')[0].childNodes) > 0) else ""
+            ProductionDateHead = xmldoc.getElementsByTagName('Head_prod._date')[0].childNodes[0].data if (len(xmldoc.getElementsByTagName('Head_prod._date')) > 0 and len(xmldoc.getElementsByTagName('Head_prod._date')[0].childNodes) > 0) else ""
+            HeadType = xmldoc.getElementsByTagName('Head_type')[0].childNodes[0].data if (len(xmldoc.getElementsByTagName('Head_type')) > 0 and len(xmldoc.getElementsByTagName('Head_type')[0].childNodes) > 0) else ""
+            DoseHeadLimit = xmldoc.getElementsByTagName('Dose_limit')[0].childNodes[0].data if (len(xmldoc.getElementsByTagName('Dose_limit')) > 0 and len(xmldoc.getElementsByTagName('Dose_limit')[0].childNodes) > 0) else ""
+            DosesDoneHead = xmldoc.getElementsByTagName('Dosing_counter')[0].childNodes[0].data if (len(xmldoc.getElementsByTagName('Dosing_counter')) > 0 and len(xmldoc.getElementsByTagName('Dosing_counter')[0].childNodes) > 0) else ""
+            mgRemainingPowderHead = xmldoc.getElementsByTagName('Rem._quantity')[0].childNodes[0].data if (len(xmldoc.getElementsByTagName('Rem._quantity')) > 0 and len(xmldoc.getElementsByTagName('Rem._quantity')[0].childNodes) > 0) else ""
+            pubSample.publish(substance, LotID, UserID, FillingDate, ExpiryDate, RetestDate, mgFillWeight,
+                            RemainingDoses, TerminalSNR, BridgeSNR, BalanceType, BalanceID, LastCalibration,
+                            OptionSNR, DoseUnitSNR, ApplicationName, DateTime, LevelControl, ProductionDateHead, HeadType, DoseHeadLimit, DosesDoneHead, mgRemainingPowderHead)
+            rospy.loginfo("Published Head Data")
+        except:
+            rospy.loginfo("Parsing XML Data Failed")
 
     def getSampleData(self):
+        global pubSample
         sampleData = self.Quantos.getSampleData()
-        #fancy processing of XML stuff placeholder
-        xmldoc = minidom.parseStrings(sampleData)
-        pubSample.publish("Stuff")
-        rospy.loginfo("Published Sample Data")
+        try:
+            xmldoc = minidom.parseString(sampleData)
+            substance = xmldoc.getElementsByTagName('Substance')[0].childNodes[0].data if (len(xmldoc.getElementsByTagName('Substance')) > 0 and len(xmldoc.getElementsByTagName('Substance')[0].childNodes) > 0) else ""
+            LotID = xmldoc.getElementsByTagName('Lot_ID')[0].childNodes[0].data if (len(xmldoc.getElementsByTagName('Lot_ID')) > 0 and len(xmldoc.getElementsByTagName('Lot_ID')[0].childNodes) > 0) else ""
+            UserID = xmldoc.getElementsByTagName('User_ID')[0].childNodes[0].data if (len(xmldoc.getElementsByTagName('User_ID')) > 0 and len(xmldoc.getElementsByTagName('User_ID')[0].childNodes) > 0) else ""
+            FillingDate = xmldoc.getElementsByTagName('Dispense_date')[0].childNodes[0].data if (len(xmldoc.getElementsByTagName('Dispense_date')) > 0 and len(xmldoc.getElementsByTagName('Dispense_date')[0].childNodes) > 0) else ""
+            ExpiryDate = xmldoc.getElementsByTagName('Exp._date')[0].childNodes[0].data if (len(xmldoc.getElementsByTagName('Exp._date')) > 0 and len(xmldoc.getElementsByTagName('Exp._date')[0].childNodes) > 0) else ""
+            RetestDate = xmldoc.getElementsByTagName('Retest_date')[0].childNodes[0].data if (len(xmldoc.getElementsByTagName('Retest_date')) > 0 and len(xmldoc.getElementsByTagName('Retest_date')[0].childNodes) > 0) else ""
+            mgFillWeight = xmldoc.getElementsByTagName('Content')[0].childNodes[0].data if (len(xmldoc.getElementsByTagName('Content')) > 0 and len(xmldoc.getElementsByTagName('Content')[0].childNodes) > 0) else ""
+            RemainingDoses = xmldoc.getElementsByTagName('Rem._dosages')[0].childNodes[0].data if (len(xmldoc.getElementsByTagName('Rem._dosages')) > 0 and len(xmldoc.getElementsByTagName('Rem._dosages')[0].childNodes) > 0) else ""
+            TerminalSNR = xmldoc.getElementsByTagName('Terminal_SNR')[0].childNodes[0].data if (len(xmldoc.getElementsByTagName('Terminal_SNR')) > 0 and len(xmldoc.getElementsByTagName('Terminal_SNR')[0].childNodes) > 0) else ""
+            BridgeSNR = xmldoc.getElementsByTagName('Bridge_SNR')[0].childNodes[0].data if (len(xmldoc.getElementsByTagName('Bridge_SNR')) > 0 and len(xmldoc.getElementsByTagName('Bridge_SNR')[0].childNodes) > 0) else ""
+            BalanceType = xmldoc.getElementsByTagName('Balance_Type')[0].childNodes[0].data if (len(xmldoc.getElementsByTagName('Balance_Type')) > 0 and len(xmldoc.getElementsByTagName('Balance_Type')[0].childNodes) > 0) else ""
+            BalanceID = xmldoc.getElementsByTagName('Balance_ID')[0].childNodes[0].data if (len(xmldoc.getElementsByTagName('Balance_ID')) > 0 and len(xmldoc.getElementsByTagName('Balance_ID')[0].childNodes) > 0) else ""
+            LastCalibration = xmldoc.getElementsByTagName('Last_cal.')[0].childNodes[0].data if (len(xmldoc.getElementsByTagName('Last_cal.')) > 0 and len(xmldoc.getElementsByTagName('Last_cal.')[0].childNodes) > 0) else ""
+            OptionSNR = xmldoc.getElementsByTagName('Option_SNR')[0].childNodes[0].data if (len(xmldoc.getElementsByTagName('Option_SNR')) > 0 and len(xmldoc.getElementsByTagName('Option_SNR')[0].childNodes) > 0) else ""
+            DoseUnitSNR = xmldoc.getElementsByTagName('Dose_unit_SNR')[0].childNodes[0].data if (len(xmldoc.getElementsByTagName('Dose_unit_SNR')) > 0 and len(xmldoc.getElementsByTagName('Dose_unit_SNR')[0].childNodes) > 0) else ""
+            ApplicationName = xmldoc.getElementsByTagName('Appl._Name')[0].childNodes[0].data if (len(xmldoc.getElementsByTagName('Appl._Name')) > 0 and len(xmldoc.getElementsByTagName('Appl._Name')[0].childNodes) > 0) else ""
+            DateTime = xmldoc.getElementsByTagName('Date_Time')[0].childNodes[0].data if (len(xmldoc.getElementsByTagName('Date_Time')) > 0 and len(xmldoc.getElementsByTagName('Date_Time')[0].childNodes) > 0) else ""
+            LevelControl = xmldoc.getElementsByTagName('Levelcontrol')[0].childNodes[0].data if (len(xmldoc.getElementsByTagName('Levelcontrol')) > 0 and len(xmldoc.getElementsByTagName('Levelcontrol')[0].childNodes) > 0) else ""
+            ProductionDateHead = xmldoc.getElementsByTagName('Head_prod._date')[0].childNodes[0].data if (len(xmldoc.getElementsByTagName('Head_prod._date')) > 0 and len(xmldoc.getElementsByTagName('Head_prod._date')[0].childNodes) > 0) else ""
+            HeadType = xmldoc.getElementsByTagName('Head_type')[0].childNodes[0].data if (len(xmldoc.getElementsByTagName('Head_type')) > 0 and len(xmldoc.getElementsByTagName('Head_type')[0].childNodes) > 0) else ""
+            DoseHeadLimit = xmldoc.getElementsByTagName('Dose_limit')[0].childNodes[0].data if (len(xmldoc.getElementsByTagName('Dose_limit')) > 0 and len(xmldoc.getElementsByTagName('Dose_limit')[0].childNodes) > 0) else ""
+            DosesDoneHead = xmldoc.getElementsByTagName('Dosing_counter')[0].childNodes[0].data if (len(xmldoc.getElementsByTagName('Dosing_counter')) > 0 and len(xmldoc.getElementsByTagName('Dosing_counter')[0].childNodes) > 0) else ""
+            mgRemainingPowderHead = xmldoc.getElementsByTagName('Rem._quantity')[0].childNodes[0].data if (len(xmldoc.getElementsByTagName('Rem._quantity')) > 0 and len(xmldoc.getElementsByTagName('Rem._quantity')[0].childNodes) > 0) else ""
+            pubSample.publish(substance, LotID, UserID, FillingDate, ExpiryDate, RetestDate, mgFillWeight,
+                            RemainingDoses, TerminalSNR, BridgeSNR, BalanceType, BalanceID, LastCalibration,
+                            OptionSNR, DoseUnitSNR, ApplicationName, DateTime, LevelControl, ProductionDateHead, HeadType, DoseHeadLimit, DosesDoneHead, mgRemainingPowderHead)
+            rospy.loginfo("Published Sample Data")
+        except:
+            rospy.loginfo("Parsing XML Data Failed")
 
     def moveDosingHeadPin(self, locked):
         self.Quantos.moveDosingHeadPin(locked)
