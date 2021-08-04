@@ -22,21 +22,29 @@ class QuantosDriverSerial:
             stopbits=serial.STOPBITS_ONE,
             bytesize=serial.EIGHTBITS,
             xonxoff=True,
-            timeout=15
+            timeout=120
         )
 
     # Commands are defined in Quantos MT-SICS datasheet, however need to be sent over serial as
     # ASCII encoded byte arrays and must end with a carriage return and line break to
-    # be recognized. Received messsages can also be decoded then to unicode strings.
+    # be recognized. Received messsages can also be decoded then to unicode string
+    def setTimeout(self, timeoutS):
+        global serialCom
+        serialCom.timeout = timeoutS
 
     def catchResponse(self):
         global serialCom
-        x = str(serialCom.read_until("\r\n").decode('ascii'))
+        x = str(serialCom.read_until(bytearray("\r\n", "ascii")).decode('ascii'))
+        if (len(x) > 3):
+            if (x[-3] == "B"):
+                x = str(serialCom.read_until(bytearray("\r\n", "ascii")).decode('ascii'))
+        else:
+            x = str(serialCom.read_until(bytearray("\r\n", "ascii")).decode('ascii'))
         try:
-            xErrCode = x[-1]
+            xErrCode = x[-3]
         except:
             xErrCode = "NoErr"
-        xErrMessage = "No Errors Detected"
+        xErrMessage = "Unknown Response"
         #Match Responses to Error messages
         rospack = rospkg.RosPack()
         with open(os.path.join(rospack.get_path("mettler_toledo_quantos_q2"), "csv", "response.csv"), 'r') as read_obj:
@@ -84,21 +92,21 @@ class QuantosDriverSerial:
     def getHeadData(self):
         global serialCom
         serialCom.write(bytearray("QRD 2 4 11\r\n", "ascii"))
-        x = serialCom.read_until("QRD 2 4 11 A")  # Read response
+        x = serialCom.read_until(bytearray("""</Info_head>""", "ascii"))  # Read response
         stringx = str(x.decode('ascii'))  # Decode response
         st = stringx.find("QRD 2 4 11 B")
-        en = stringx.find("QRD 2 4 11 A")
-        stringx = stringx[st+14:en]
+        #en = stringx.find("QRD 2 4 11 A")
+        stringx = stringx[st+14:]
         return stringx
 
     def getSampleData(self):
         global serialCom
         serialCom.write(bytearray("QRD 2 4 12\r\n", "ascii"))
-        x = serialCom.read_until("QRD 2 4 12 A")  # Read response
+        x = serialCom.read_until(bytearray("""</Dosing>""", "ascii"))  # Read response
         stringx = str(x.decode('ascii'))  # Decode response
         st = stringx.find("QRD 2 4 12 B")
-        en = stringx.find("QRD 2 4 12 A")
-        stringx = stringx[st+14:en]
+        #en = stringx.find("QRD 2 4 12 A")
+        stringx = stringx[st+14:]
         return stringx
 
     def moveDosingHeadPin(self, locked):

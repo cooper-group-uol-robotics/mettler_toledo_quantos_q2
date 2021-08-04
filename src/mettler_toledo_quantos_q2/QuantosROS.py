@@ -50,6 +50,7 @@ class QuantosDriverROS:
 
     def getHeadData(self):
         global pubSample
+        self.Quantos.setTimeout(30.0)
         headData = self.Quantos.getHeadData()
         print(headData)
         try:
@@ -83,9 +84,11 @@ class QuantosDriverROS:
             rospy.loginfo("Published Head Data")
         except:
             rospy.loginfo("Parsing XML Data Failed")
+        self.Quantos.setTimeout(120.0)
 
     def getSampleData(self):
         global pubSample
+        self.Quantos.setTimeout(30.0)
         sampleData = self.Quantos.getSampleData()
         print(sampleData)
         try:
@@ -119,6 +122,7 @@ class QuantosDriverROS:
             rospy.loginfo("Published Sample Data")
         except:
             rospy.loginfo("Parsing XML Data Failed")
+        self.Quantos.setTimeout(120.0)
 
     def moveDosingHeadPin(self, locked):
         self.Quantos.moveDosingHeadPin(locked)
@@ -207,13 +211,13 @@ class QuantosDriverROS:
                     response = self.Quantos.catchResponse()
                     failed = False if (response == "Successfully Executed") else True
                     if (not failed):
-                        self.Quantos.startDose()
+                        self.Quantos.setTimeout(30.0)
+                        self.Quantos.startDosing()
                         response = self.Quantos.catchResponse()
                         failed = False if (response == "Successfully Executed") else True
 
         if (failed): rospy.loginfo("Errors Detected, Aborted")
         rospy.loginfo(response)
-
 
     # Callback for subscriber. Calls correct function depending on command received
     def callback_commands(self, msg):
