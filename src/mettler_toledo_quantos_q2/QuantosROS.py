@@ -190,66 +190,76 @@ class QuantosDriverROS:
 
     def dispenseSolid(self, position, amount):
         failed = False
+        response = "test"
         self.Quantos.moveFrontDoor(False)
-        failed = False if (self.Quantos.catchResponse() == "Successfully Executed") else True
-        if (not failed): self.Quantos.moveDosingHeadPin(True)
-        failed = False if (self.Quantos.catchResponse() == "Successfully Executed") else True
-        if (not failed): self.Quantos.setTargetValue(amount)
-        failed = False if (self.Quantos.catchResponse() == "Successfully Executed") else True
-        if (not failed): self.Quantos.moveSampler(position)
-        failed = False if (self.Quantos.catchResponse() == "Successfully Executed") else True
-        if (not failed): self.Quantos.startDose()
-        failed = False if (self.Quantos.catchResponse() == "Successfully Executed") else True
-        if (failed):
-            rospy.loginfo("Errors Detected, Aborted")
-        else:
-            rospy.loginfo("Successfully Executed Dispensing")
+        response = self.Quantos.catchResponse()
+        failed = False if (response == "Successfully Executed") else True
+        if (not failed):
+            self.Quantos.moveDosingHeadPin(True)
+            response = self.Quantos.catchResponse()
+            failed = False if (response == "Successfully Executed") else True
+            if (not failed):
+                self.Quantos.setTargetValue(amount)
+                response = self.Quantos.catchResponse()
+                failed = False if (response == "Successfully Executed") else True
+                if (not failed):
+                    self.Quantos.moveSampler(position)
+                    response = self.Quantos.catchResponse()
+                    failed = False if (response == "Successfully Executed") else True
+                    if (not failed):
+                        self.Quantos.startDose()
+                        response = self.Quantos.catchResponse()
+                        failed = False if (response == "Successfully Executed") else True
+
+        if (failed): rospy.loginfo("Errors Detected, Aborted")
+        rospy.loginfo(response)
 
 
     # Callback for subscriber. Calls correct function depending on command received
     def callback_commands(self, msg):
-        if(msg.quantos_command == msg.STARTDOSE):
-            self.startDose()
-        elif(msg.quantos_command == msg.STOPDOSE):
-            self.stopDose()
-        elif(msg.quantos_command == msg.GETDOORPOS):
-            self.getFrontDoorPos()
-        elif(msg.quantos_command == msg.GETSAMPLEPOS):
-            self.getSamplerPos()
-        elif(msg.quantos_command == msg.GETHEAD):
-            self.getHeadData()
-        elif(msg.quantos_command == msg.GETSAMPLE):
-            self.getSampleData()
-        elif(msg.quantos_command == msg.MOVEPIN):
-            self.moveDosingHeadPin(msg.quantos_bool)
-        elif(msg.quantos_command == msg.MOVEDOOR):
-            self.moveFrontDoor(msg.quantos_bool)
-        elif(msg.quantos_command == msg.SETSAMPLEPOS):
-            self.moveSampler(msg.quantos_int)
-        elif(msg.quantos_command == msg.SETTAPBEFORE):
-            self.setTappingBeforeDosing(msg.quantos_bool)
-        elif(msg.quantos_command == msg.SETTAPDURING):
-            self.setTappingWhileDosing(msg.quantos_bool)
-        elif(msg.quantos_command == msg.SETTAPINT):
-            self.setTapperIntensity(msg.quantos_int)
-        elif(msg.quantos_command == msg.SETTAPDURATION):
-            self.setTapperDuration(msg.quantos_int)
-        elif(msg.quantos_command == msg.SETTARGET):
-            self.setTargetValue(msg.quantos_float)
-        elif(msg.quantos_command == msg.SETTOL):
-            self.setTolerance(msg.quantos_float)
-        elif(msg.quantos_command == msg.SETTOLMODE):
-            self.setToleranceMode(msg.quantos_bool)
-        elif(msg.quantos_command == msg.SETSAMPLEID):
-            self.setSampleID(msg.quantos_ID)
-        elif(msg.quantos_command == msg.SETPANOFF):
-            self.setValuePan()
-        elif(msg.quantos_command == msg.SETALGO):
-            self.setAlgorithm(msg.quantos_bool)
-        elif(msg.quantos_command == msg.SETAS):
-            self.setAntiStatic(msg.quantos_bool)
-        elif(msg.quantos_command == msg.DISPENSESOLID):
+        if(msg.quantos_command == msg.DISPENSESOLID):
             self.dispenseSolid(msg.quantos_int, msg.quantos_float)
         else:
-            rospy.loginfo("invalid command")
-        rospy.loginfo(self.Quantos.catchResponse())
+            if(msg.quantos_command == msg.STARTDOSE):
+                self.startDose()
+            elif(msg.quantos_command == msg.STOPDOSE):
+                self.stopDose()
+            elif(msg.quantos_command == msg.GETDOORPOS):
+                self.getFrontDoorPos()
+            elif(msg.quantos_command == msg.GETSAMPLEPOS):
+                self.getSamplerPos()
+            elif(msg.quantos_command == msg.GETHEAD):
+                self.getHeadData()
+            elif(msg.quantos_command == msg.GETSAMPLE):
+                self.getSampleData()
+            elif(msg.quantos_command == msg.MOVEPIN):
+                self.moveDosingHeadPin(msg.quantos_bool)
+            elif(msg.quantos_command == msg.MOVEDOOR):
+                self.moveFrontDoor(msg.quantos_bool)
+            elif(msg.quantos_command == msg.SETSAMPLEPOS):
+                self.moveSampler(msg.quantos_int)
+            elif(msg.quantos_command == msg.SETTAPBEFORE):
+                self.setTappingBeforeDosing(msg.quantos_bool)
+            elif(msg.quantos_command == msg.SETTAPDURING):
+                self.setTappingWhileDosing(msg.quantos_bool)
+            elif(msg.quantos_command == msg.SETTAPINT):
+                self.setTapperIntensity(msg.quantos_int)
+            elif(msg.quantos_command == msg.SETTAPDURATION):
+                self.setTapperDuration(msg.quantos_int)
+            elif(msg.quantos_command == msg.SETTARGET):
+                self.setTargetValue(msg.quantos_float)
+            elif(msg.quantos_command == msg.SETTOL):
+                self.setTolerance(msg.quantos_float)
+            elif(msg.quantos_command == msg.SETTOLMODE):
+                self.setToleranceMode(msg.quantos_bool)
+            elif(msg.quantos_command == msg.SETSAMPLEID):
+                self.setSampleID(msg.quantos_ID)
+            elif(msg.quantos_command == msg.SETPANOFF):
+                self.setValuePan()
+            elif(msg.quantos_command == msg.SETALGO):
+                self.setAlgorithm(msg.quantos_bool)
+            elif(msg.quantos_command == msg.SETAS):
+                self.setAntiStatic(msg.quantos_bool)
+            else:
+                rospy.loginfo("invalid command")
+            rospy.loginfo(self.Quantos.catchResponse())
