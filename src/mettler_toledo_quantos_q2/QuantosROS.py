@@ -211,7 +211,6 @@ class QuantosDriverROS:
                     response = self.Quantos.catchResponse()
                     failed = False if (response == "Successfully Executed") else True
                     if (not failed):
-                        self.Quantos.setTimeout(30.0)
                         self.Quantos.startDosing()
                         response = self.Quantos.catchResponse()
                         failed = False if (response == "Successfully Executed") else True
