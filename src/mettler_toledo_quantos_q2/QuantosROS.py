@@ -188,6 +188,24 @@ class QuantosDriverROS:
         self.Quantos.setAntiStatic(activated)
         rospy.loginfo("Setting antistatic system activation")
 
+    def dispenseSolid(self, position, amount):
+        failed = False
+            self.Quantos.moveFrontDoor(False)
+            failed = False if (self.Quantos.catchResponse() == "Successfully Executed") else True
+            if (not failed): self.Quantos.moveDosingHeadPin(True)
+            failed = False if (self.Quantos.catchResponse() == "Successfully Executed") else True
+            if (not failed): self.Quantos.setTargetValue(amount)
+            failed = False if (self.Quantos.catchResponse() == "Successfully Executed") else True
+            if (not failed): self.Quantos.moveSampler(position)
+            failed = False if (self.Quantos.catchResponse() == "Successfully Executed") else True
+            if (not failed): self.Quantos.startDose()
+            failed = False if (self.Quantos.catchResponse() == "Successfully Executed") else True
+            if (failed):
+                rospy.loginfo("Errors Detected, Aborted")
+            else:
+                rospy.loginfo("Successfully Executed Dispensing")
+
+
     # Callback for subscriber. Calls correct function depending on command received
     def callback_commands(self, msg):
         if(msg.quantos_command == msg.STARTDOSE):
@@ -230,5 +248,8 @@ class QuantosDriverROS:
             self.setAlgorithm(msg.quantos_bool)
         elif(msg.quantos_command == msg.SETAS):
             self.setAntiStatic(msg.quantos_bool)
+        elif(msg.quantos_command == msg.DISPENSESOLID):
+            self.dispenseSolid(msg.quantos_int, msg.quantos_float)
         else:
             rospy.loginfo("invalid command")
+        rospy.loginfo(self.Quantos.catchResponse())

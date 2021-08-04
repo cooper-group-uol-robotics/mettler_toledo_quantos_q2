@@ -19,6 +19,7 @@ int32 SETSAMPLEID = 16
 int32 SETPANOFF = 17
 int32 SETALGO = 18
 int32 SETAS = 19
+int32 DISPENSESOLID = 20
 
 int32 quantos_command
 string quantos_ID

@@ -8,7 +8,7 @@ from csv import reader
 import time
 import serial
 import re
-
+import os, rospkg
 
 class QuantosDriverSerial:
     serialCom = serial.Serial()  # Globally define serial communication
@@ -31,19 +31,23 @@ class QuantosDriverSerial:
 
     def catchResponse(self):
         global serialCom
-        x = serialCom.read_until("\r\n")
-        print(x)
+        x = str(serialCom.read_until("\r\n").decode('ascii'))
+        try:
+            xErrCode = x[-1]
+        except:
+            xErrCode = "NoErr"
+        xErrMessage = "No Errors Detected"
         #Match Responses to Error messages
-        with open('response.csv', 'r') as read_obj:
+        rospack = rospkg.RosPack()
+        with open(os.path.join(rospack.get_path("mettler_toledo_quantos_q2"), "csv", "response.csv"), 'r') as read_obj:
             # pass the file object to reader() to get the reader object
             csv_reader = reader(read_obj)
             # Pass reader object to list() to get a list of lists
             list_of_rows = list(csv_reader)
-            for i in range(10):
-                if (x == list_of_rows[i][0]):
-                    print(list_of_rows[i][1])
-                    break
-
+            for i in range(len(list_of_rows)):
+                if (xErrCode == list_of_rows[i][0]):
+                    xErrMessage=list_of_rows[i][1]
+        return xErrMessage
 
     def startDosing(self):
         global serialCom

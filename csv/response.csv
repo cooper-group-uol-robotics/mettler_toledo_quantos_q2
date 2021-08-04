@@ -1,0 +1,16 @@
+1,Error: Not mounted
+2,Error: Another job is running
+3,Error: Timeout
+4,Error: Not selected
+5,Error: Not Allowed at the moment
+6,Error: Weight not stable
+7,Error: Powderflow error
+8,Error: Stopped by external action
+9,Error: Safepos error
+10,Error: Head not allowed
+11,Error: Head limit reached
+12,Error: Head expiry date reached
+13,Error: Sampler blocked
+L,Error: Incorrect Parameter
+NoErr,Error: No Response received - Check Serial Communication
+A,Successfully Executed
