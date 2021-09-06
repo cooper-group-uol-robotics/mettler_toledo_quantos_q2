@@ -10,6 +10,7 @@ from mettler_toledo_quantos_q2.msg import QuantosCommand
 from mettler_toledo_quantos_q2.msg import QuantosSample
 from mettler_toledo_quantos_q2.QuantosSerial import QuantosDriverSerial
 from xml.dom import minidom
+from std_msgs.msg import String
 
 class QuantosDriverROS:
     global doorPos
@@ -25,6 +26,7 @@ class QuantosDriverROS:
         # Initialize ros subscriber of topic to which commands are published
         rospy.Subscriber("Quantos_Commands", QuantosCommand, self.callback_commands)
         # Initialize ros published for readings of temperatures and stirring values
+        pubDone = rospy.Publisher("Quantos_Done", String, queue_size=1)
         pub = rospy.Publisher("Quantos_Info", QuantosResponse, queue_size=10)
         pubSample = rospy.Publisher("Quantos_Samples", QuantosSample, queue_size=10)
         rospy.loginfo("Quantos Driver Started")
@@ -217,6 +219,7 @@ class QuantosDriverROS:
 
         if (failed): rospy.loginfo("Errors Detected, Aborted")
         rospy.loginfo(response)
+        pubDone.publish("Done")
 
     # Callback for subscriber. Calls correct function depending on command received
     def callback_commands(self, msg):
@@ -265,4 +268,8 @@ class QuantosDriverROS:
                 self.setAntiStatic(msg.quantos_bool)
             else:
                 rospy.loginfo("invalid command")
-            rospy.loginfo(self.Quantos.catchResponse())
+            resp = self.Quantos.catchResponse()
+            while(resp== None):
+                resp = self.Quantos.catchResponse()
+            rospy.loginfo(resp)
+            pubDone.publish(resp)
