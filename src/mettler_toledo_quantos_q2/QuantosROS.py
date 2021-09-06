@@ -215,12 +215,9 @@ class QuantosDriverROS:
                     failed = False if (response == "Successfully Executed") else True
                     if (not failed):
                         self.Quantos.startDosing()
-                        response = self.Quantos.catchResponse()
-                        failed = False if (response == "Successfully Executed") else True
 
         if (failed): rospy.loginfo("Errors Detected, Aborted")
         rospy.loginfo(response)
-        pubDone.publish("Done")
 
     # Callback for subscriber. Calls correct function depending on command received
     def callback_commands(self, msg):
