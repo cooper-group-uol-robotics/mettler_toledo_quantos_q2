@@ -20,6 +20,7 @@ class QuantosDriverROS:
         global doorPos
         global samplerPos
         global pubSample
+        global pubDone
         doorPos = 0
         samplerPos = 0
         self.Quantos = QuantosDriverSerial()  # Create object of IKADriver class, for serial communication
@@ -223,6 +224,7 @@ class QuantosDriverROS:
 
     # Callback for subscriber. Calls correct function depending on command received
     def callback_commands(self, msg):
+        global pubDone
         if(msg.quantos_command == msg.DISPENSESOLID):
             self.dispenseSolid(msg.quantos_int, msg.quantos_float)
         else:
