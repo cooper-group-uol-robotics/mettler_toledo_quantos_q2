@@ -5,17 +5,17 @@
 # Made by Jakub Glowacki 03/08/2021
 
 import rospy
-from mettler_toledo_quantos_q2.msg import QuantosResponse
-from mettler_toledo_quantos_q2.msg import QuantosCommand
-from mettler_toledo_quantos_q2.msg import QuantosSample
-from mettler_toledo_quantos_q2.QuantosSerial import QuantosDriverSerial
+from mettler_toledo_quantos_q2_msgs.msg import QuantosResponse
+from mettler_toledo_quantos_q2_msgs.msg import QuantosCommand
+from mettler_toledo_quantos_q2_msgs.msg import QuantosSample
+from mettler_toledo_quantos_q2_driver.quantos_serial_driver import QuantosDriverSerial
 from xml.dom import minidom
 from std_msgs.msg import String
 
 class QuantosDriverROS:
     global doorPos
     global samplerPos
-    def __init__(self):
+    def __init__(self, serial_port):
         global pub
         global doorPos
         global samplerPos
@@ -23,7 +23,7 @@ class QuantosDriverROS:
         global pubDone
         doorPos = 0
         samplerPos = 0
-        self.Quantos = QuantosDriverSerial()  # Create object of IKADriver class, for serial communication
+        self.Quantos = QuantosDriverSerial(serial_port)  # Create object of IKADriver class, for serial communication
         # Initialize ros subscriber of topic to which commands are published
         rospy.Subscriber("Quantos_Commands", QuantosCommand, self.callback_commands)
         # Initialize ros published for readings of temperatures and stirring values
